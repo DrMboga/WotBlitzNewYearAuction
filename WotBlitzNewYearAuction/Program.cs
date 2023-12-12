@@ -36,7 +36,7 @@ static async Task ReadAuction()
         Console.WriteLine($"Auction data on '{DateTime.Now.ToString("dd.MM.yyyy HH:mm")}': {AuctionUrl}");
         Console.WriteLine();
 
-        foreach (var auctionItem in auctionData.AuctionItems.Where(i => i.Available && i.Vehicle != null))
+        foreach (var auctionItem in auctionData.AuctionItems.Where(i => i.Available && i.Vehicle != null).OrderBy(i => i.AvailableBefore))
         {
             var initialPrice = initialPrices.FirstOrDefault(p => p.VehicleId == auctionItem.Vehicle!.Id);
 
@@ -86,7 +86,7 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     }
 
     // Tank tier, nation and type
-    var tankInfo = $"{vehicle.Tier}-{vehicleType}-{vehicle.Nation.ToUpper()}";
+    var tankInfo = $"{vehicle.Tier.PadLeft(4)} {vehicleType} {vehicle.Nation.ToUpper()}";
     Console.Write($"| {tankInfo.PadRight(15)}|");
     // Tank Name
     Console.ForegroundColor = ConsoleColor.Blue;
@@ -139,6 +139,9 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     Console.Write(timeToNextPrice.ToString(@"hh\:mm\:ss"));
 
     Console.Write(" |");
+
+    // AvailabilityDates
+    Console.Write ($"{auctionItem.AvailableFrom.ToString("dd.MM.yy")} - {auctionItem.AvailableBefore.ToString("dd.MM.yy")} |");
 
     Console.WriteLine();
 }
