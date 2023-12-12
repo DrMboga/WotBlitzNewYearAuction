@@ -35,6 +35,9 @@ static async Task ReadAuction()
         Console.Clear();
         Console.WriteLine($"Auction data on '{DateTime.Now.ToString("dd.MM.yyyy HH:mm")}': {AuctionUrl}");
         Console.WriteLine();
+        // 117: |17|19|19|17|17|21|
+        Console.WriteLine("|    Tank info    |     Tank name     |   Current price   |    Available    |   Next price    | Availability period |");
+        Console.WriteLine(new string('-', 117));
 
         foreach (var auctionItem in auctionData.AuctionItems.Where(i => i.Available && i.Vehicle != null).OrderBy(i => i.AvailableBefore))
         {
