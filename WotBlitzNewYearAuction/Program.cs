@@ -86,11 +86,13 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     }
 
     // Tank tier, nation and type
-    var tankInfo = $"{vehicle.Tier.PadLeft(4)} {vehicleType} {vehicle.Nation.ToUpper()}";
-    Console.Write($"| {tankInfo.PadRight(20)}|");
+    var vehicleNation = vehicle.Nation.Length <= 8 ? vehicle.Nation.ToUpper() : $"{vehicle.Nation.ToUpper().Substring(0, 6)}..";
+    var tankInfo = $"{vehicle.Tier.PadLeft(4)} {vehicleType} {vehicleNation}";
+    Console.Write($"| {tankInfo.PadRight(16)}|");
     // Tank Name
     Console.ForegroundColor = ConsoleColor.Blue;
-    Console.Write($" {vehicle.Name.PadRight(15)}");
+    var vehicleName = vehicle.Name.Length <= 18 ? vehicle.Name : $"{vehicle.Name.Substring(0, 15)}...";
+    Console.Write($" {vehicleName.PadRight(18)}");
     Console.ResetColor();
     Console.Write("|");
 
@@ -104,11 +106,11 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     {
         int diff = auctionItem.InitialPrice - currentPrice;
         int diffPercent = Convert.ToInt32(100 * (Convert.ToDecimal(diff) / Convert.ToDecimal(auctionItem.InitialPrice)));
-        Console.Write($" -{diff} ({diffPercent}%)".PadRight(15));
+        Console.Write($" -{diff} ({diffPercent}%)".PadRight(12));
     }
     else
     {
-        Console.Write(" ".PadRight(15));
+        Console.Write(" ".PadRight(12));
     }
     Console.Write("|");
 
@@ -136,7 +138,7 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     Console.ResetColor();
     var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.UtcNow;
     Console.Write(" in ");
-    Console.Write(timeToNextPrice.ToString(@"hh\:mm\:ss"));
+    Console.Write(timeToNextPrice.ToString(@"hh\:mm"));
 
     Console.Write(" |");
 
