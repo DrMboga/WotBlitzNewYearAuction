@@ -87,7 +87,7 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
 
     // Tank tier, nation and type
     var tankInfo = $"{vehicle.Tier.PadLeft(4)} {vehicleType} {vehicle.Nation.ToUpper()}";
-    Console.Write($"| {tankInfo.PadRight(15)}|");
+    Console.Write($"| {tankInfo.PadRight(20)}|");
     // Tank Name
     Console.ForegroundColor = ConsoleColor.Blue;
     Console.Write($" {vehicle.Name.PadRight(15)}");
@@ -134,14 +134,14 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.Write($"{nextPrice.ToString().PadLeft(7)}");
     Console.ResetColor();
-    var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.Now;
+    var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.UtcNow;
     Console.Write(" in ");
     Console.Write(timeToNextPrice.ToString(@"hh\:mm\:ss"));
 
     Console.Write(" |");
 
     // AvailabilityDates
-    Console.Write ($"{auctionItem.AvailableFrom.ToString("dd.MM.yy")} - {auctionItem.AvailableBefore.ToString("dd.MM.yy")} |");
+    Console.Write ($" {auctionItem.AvailableFrom.ToString("dd.MM.yy")} - {auctionItem.AvailableBefore.ToString("dd.MM.yy")} |");
 
     Console.WriteLine();
 }
