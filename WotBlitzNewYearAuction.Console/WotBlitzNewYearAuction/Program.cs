@@ -90,8 +90,12 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
 
     // Tank tier, nation and type
     var vehicleNation = vehicle.Nation.Length <= 8 ? vehicle.Nation.ToUpper() : $"{vehicle.Nation.ToUpper().Substring(0, 6)}..";
-    var tankInfo = $"{vehicle.Tier.PadLeft(4)} {vehicleType} {vehicleNation}";
-    Console.Write($"| {tankInfo.PadRight(16)}|");
+    Console.Write($"| {vehicle.Tier.PadLeft(4)}");
+    Console.ForegroundColor = vehicle.IsCollectible ? ConsoleColor.DarkBlue : (vehicle.IsPremium ? ConsoleColor.Yellow : ConsoleColor.DarkGray);
+    Console.Write($" {vehicleType} ");
+    Console.ResetColor();
+    Console.Write($"{vehicleNation.PadRight(8)}|");
+
     // Tank Name
     Console.ForegroundColor = ConsoleColor.Blue;
     var vehicleName = vehicle.Name.Length <= 18 ? vehicle.Name : $"{vehicle.Name.Substring(0, 15)}...";
@@ -101,7 +105,7 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
 
     // Tank price
     int currentPrice = auctionItem.Price!.PriceValue;
-    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.Write($"{currentPrice.ToString().PadLeft(7)}");
     Console.ResetColor();
     // TankPrice drop (if any)
@@ -136,7 +140,7 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
 
     // Next price
     int nextPrice = auctionItem.NextPrice!.PriceValue;
-    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.Write($"{nextPrice.ToString().PadLeft(7)}");
     Console.ResetColor();
     var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.UtcNow;
