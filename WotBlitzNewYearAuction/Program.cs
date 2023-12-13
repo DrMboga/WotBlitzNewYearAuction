@@ -39,7 +39,7 @@ static async Task ReadAuction()
         Console.WriteLine("|    Tank info    |     Tank name     |   Current price   |    Available    |   Next price    | Availability period |");
         Console.WriteLine(new string('-', 117));
 
-        foreach (var auctionItem in auctionData.AuctionItems.Where(i => i.Available && i.Vehicle != null).OrderBy(i => i.AvailableBefore))
+        foreach (var auctionItem in auctionData.AuctionItems.Where(i => i.Available && i.Vehicle != null && i.CurrentCount > 0).OrderBy(i => i.AvailableBefore))
         {
             var initialPrice = initialPrices.FirstOrDefault(p => p.VehicleId == auctionItem.Vehicle!.Id);
 
