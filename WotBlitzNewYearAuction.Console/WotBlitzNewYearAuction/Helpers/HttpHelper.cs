@@ -6,7 +6,7 @@ namespace WotBlitzNewYearAuction;
 
 public static class HttpHelper
 {
-    const string AuctionApiUrl = "https://eu.wotblitz.com/en/api/events/items/auction/?type[]=vehicle&saleable=true";
+    const string AuctionApiUrl = "https://eu.wotblitz.com/en/api/events/items/auction/?page_size=80&type[]=vehicle&saleable=true";
 
     public static async Task<AuctionResponse?> GetAuctionData() {
         using HttpClient client = new();
