@@ -21,7 +21,7 @@ public class AuctionItem
     public DateTime AvailableBefore { get; set; }
 
     [JsonPropertyName("next_price_datetime")]
-    public DateTime NextPriceDropAt { get; set; }
+    public DateTime? NextPriceDropAt { get; set; }
 
     [JsonPropertyName("price")]
     public ItemPrice? Price { get; set; }

@@ -139,13 +139,27 @@ static void WriteLineAuctionRow(AuctionItem auctionItem)
     Console.Write("|");
 
     // Next price
-    int nextPrice = auctionItem.NextPrice!.PriceValue;
-    Console.ForegroundColor = ConsoleColor.DarkYellow;
-    Console.Write($"{nextPrice.ToString().PadLeft(7)}");
-    Console.ResetColor();
-    var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.UtcNow;
-    Console.Write(" in ");
-    Console.Write(timeToNextPrice.ToString(@"hh\:mm"));
+    if (auctionItem.NextPrice != null)
+    {
+        int nextPrice = auctionItem.NextPrice.PriceValue;
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.Write($"{nextPrice.ToString().PadLeft(7)}");
+        Console.ResetColor();
+    }
+    else
+    {
+        Console.Write(new String(' ', 7));
+    }
+    if (auctionItem.NextPriceDropAt != null)
+    {
+        var timeToNextPrice = auctionItem.NextPriceDropAt - DateTime.UtcNow;
+        Console.Write(" in ");
+        Console.Write(timeToNextPrice?.ToString(@"hh\:mm") ?? new String(' ', 5));
+    }
+    else 
+    {
+        Console.Write(new String(' ', 9));
+    }
 
     Console.Write(" |");
 
