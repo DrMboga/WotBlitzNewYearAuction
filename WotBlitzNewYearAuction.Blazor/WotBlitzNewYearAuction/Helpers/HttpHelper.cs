@@ -7,7 +7,8 @@ namespace WotBlitzNewYearAuction;
 
 public static class HttpHelper
 {
-    const string AuctionApiUrl = "https://eu.wotblitz.com/en/api/events/items/auction/?page_size=80&type[]=vehicle&saleable=true";
+    // Publish and run locally WotBlitzNewYearAuction.NoCorsProxy
+    const string AuctionApiUrl = "http://localhost:6001/auction";
 
     public static async Task<AuctionResponse?> GetAuctionData(this HttpClient client) {
         client.DefaultRequestHeaders.Accept.Clear();
@@ -15,12 +16,7 @@ public static class HttpHelper
             new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Add("User-Agent", ".NET Auction app");
 
-        var request = new HttpRequestMessage(HttpMethod.Get, AuctionApiUrl);
-        request.SetBrowserRequestMode(BrowserRequestMode.NoCors);
-        
-        var httpResponse = await client.SendAsync(request);
-        httpResponse.EnsureSuccessStatusCode();
-        await using Stream stream = await httpResponse.Content.ReadAsStreamAsync();
+        await using Stream stream = await client.GetStreamAsync(AuctionApiUrl);
         var response = await JsonSerializer.DeserializeAsync<AuctionResponse>(stream);
 
         return response;
