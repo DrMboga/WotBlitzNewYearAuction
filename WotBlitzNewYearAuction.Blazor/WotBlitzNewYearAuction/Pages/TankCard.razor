@@ -1,0 +1,32 @@
+﻿@if(Vehicle != null)
+{
+    <div class="tank-image">
+        <div class="tank-flag-background" style="background-image: url('@Vehicle.Nation!.NationAsset()')"></div>
+        <div class="tank-tier">
+        @if (Vehicle.IsPremium)
+        {
+            @if (Vehicle.IsCollectible)
+            {
+                <b style="color: @CollectibleColor; font-size: 16px"> @Vehicle.Tier</b>
+            } else
+            {
+                <b style="color: @PremiumColor; font-size: 16px"> @Vehicle.Tier</b>
+            }
+        }
+        else
+        {
+            <b style="font-size: 16px"> @Vehicle.Tier</b>
+        }
+        </div>
+        <img src=@Vehicle.PreviewImageUrl class="tank-preview" />
+        <img src="@Vehicle.Type!.TankTypeAsset(Vehicle.IsPremium, Vehicle.IsCollectible)" class="tank-type" />
+    </div>
+}
+
+@code {
+    public string PremiumColor => "#d4d481";
+    public string CollectibleColor => "#64c8f5";
+
+    [Parameter]
+    public Vehicle? Vehicle { get; set; }
+}
