@@ -1,10 +1,15 @@
 ﻿@page "/"
+@inject HttpClient Http;
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Auction WOT Blitz</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if(Auction != null && Auction.AuctionItems != null && Auction.AuctionItems.Length > 0) {
+    @foreach(var auctionItem in Auction.AuctionItems.Where(i => i.Available && i.CurrentCount > 0)) {
+        <p>@auctionItem.Vehicle!.Name</p>
+    }
+}
 
 <TankCard Vehicle=@Vehicle></TankCard>
 
@@ -12,20 +17,12 @@ Welcome to your new app.
 @code {
     public Vehicle? Vehicle { get; set; }
 
+    public AuctionResponse? Auction { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // TODO: setup timer to call API
+        Auction = await Http.GetAuctionData();
 
-        Vehicle = new Vehicle {
-            Id = 27425,
-            Name = "TL-7-120",
-            Nation = "usa",
-            Tier = "IX",
-            Type = "heavyTank",
-            IsPremium = true,
-            IsCollectible = true,
-            ImageUrl = "https://glossary-eu-static.gcdn.co/icons/wotb/10.4.0.391/uploaded/vehicles/hd/A146_TL_7_120.png",
-            PreviewImageUrl = "https://glossary-eu-static.gcdn.co/icons/wotb/10.4.0.391/uploaded/vehicles/hd_thumbnail/A146_TL_7_120.png"
-        };
     }
 }
