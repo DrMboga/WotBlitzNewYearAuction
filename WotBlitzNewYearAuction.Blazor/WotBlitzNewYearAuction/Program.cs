@@ -6,5 +6,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient());
+builder.Services.AddTransient<LocalStorage>();
 
 await builder.Build().RunAsync();
