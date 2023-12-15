@@ -1,0 +1,6 @@
+@WotBlitzNewYearAuction_HostAddress = http://localhost:5285
+
+GET {{WotBlitzNewYearAuction_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
