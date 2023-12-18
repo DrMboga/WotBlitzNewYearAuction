@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useAuction } from './UseAuction';
 import { Alert, CircularProgress } from '@mui/material';
 import { AuctionItem } from '../Model/AuctionItem';
+import { TankCard } from './TankCard';
 
 export function Auction() {
   const { loading, auctionItems, error } = useAuction();
@@ -25,7 +26,7 @@ export function Auction() {
           .filter((i) => i.available && i.current_count > 0)
           .sort(sortByAvailableDate)
           .map((auctionItem) => {
-            return <p key={auctionItem.entity?.id}>{auctionItem.entity?.user_string}</p>;
+            return <TankCard key={auctionItem.entity?.id} vehicle={auctionItem.entity}></TankCard>;
           })}
       </>
     );
