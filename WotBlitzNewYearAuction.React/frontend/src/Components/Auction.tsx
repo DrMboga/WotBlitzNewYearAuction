@@ -98,7 +98,7 @@ export function Auction() {
                         </TableCell>
                         <TableCell align="right">
                           <span style={{ color: PremiumColor }}>{auctionItem.price?.value}</span>
-                          {priceDrop(auctionItem.price?.value, 8000)}
+                          {priceDrop(auctionItem.price?.value, auctionItem.initialPrice)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -126,7 +126,7 @@ export function Auction() {
                           Available until
                         </TableCell>
                         <TableCell align="right">
-                          {auctionItem.available_before.toLocaleString('de-DE')}
+                          {new Date(auctionItem.available_before).toLocaleDateString('de-DE')}
                         </TableCell>
                       </TableRow>
                       <TableRow sx={{ border: 0 }}>
@@ -135,7 +135,7 @@ export function Auction() {
                         </TableCell>
                         <TableCell align="right" sx={{ border: 0 }}>
                           <span style={{ color: PremiumColor }}>
-                            @auctionItem.NextPrice?.PriceValue
+                            {auctionItem.next_price?.value}
                           </span>
                         </TableCell>
                       </TableRow>
