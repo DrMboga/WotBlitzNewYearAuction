@@ -4,8 +4,8 @@ import { Vehicle } from '../Model/Vehicle';
 import './TankCard.css';
 import { nationAsset, tankTypeAsset } from '../helpers';
 
-const PremiumColor = '#d4d481';
-const CollectibleColor = '#64c8f5';
+export const PremiumColor = '#d4d481';
+export const CollectibleColor = '#64c8f5';
 
 type Props = {
   vehicle?: Vehicle;
