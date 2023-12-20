@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-auction',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './auction.component.html',
-  styleUrl: './auction.component.css'
+  styleUrl: './auction.component.css',
 })
-export class AuctionComponent {
-
-}
+export class AuctionComponent {}
