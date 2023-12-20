@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuctionResponse } from '../../Model/AuctionResponse';
 import { catchError, map, Observable, throwError } from 'rxjs';
@@ -6,6 +6,7 @@ import { AuctionItem } from '../../Model/AuctionItem';
 import { InitialPricesPersistenceService } from './initial-prices-persistence.service';
 
 const AuctionUrl = 'http://localhost:6001/auction';
+const MinDateTime = 2674800000; // 01.01.1970 in ms
 
 const sortByAvailableDate = (a: AuctionItem, b: AuctionItem): number => {
   if (a.available_before === b.available_before) {
@@ -18,6 +19,9 @@ const sortByAvailableDate = (a: AuctionItem, b: AuctionItem): number => {
   providedIn: 'root',
 })
 export class AuctionApiService {
+  public nextPriceDropTime = signal<Date | undefined>(undefined);
+  public lastReadTime = signal<number>(MinDateTime);
+
   constructor(
     private http: HttpClient,
     private initialPricesPersistence: InitialPricesPersistenceService,
@@ -45,12 +49,12 @@ export class AuctionApiService {
           }
 
           if (auctionItem.next_price_datetime) {
-            // TODO: Push next price to variable
+            this.nextPriceDropTime.set(auctionItem.next_price_datetime);
           }
         }
 
         const now = new Date();
-        // TODO: Set this date to lastApiReadTime
+        this.lastReadTime.set(now.getTime());
 
         return response.results
           .filter((i) => i.available && i.current_count > 0)

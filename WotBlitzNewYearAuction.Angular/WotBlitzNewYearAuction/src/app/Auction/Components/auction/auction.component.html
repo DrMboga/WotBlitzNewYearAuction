@@ -2,8 +2,40 @@
   <a mat-button href="https://eu.wotblitz.com/en/auction/#/">WOT Blitz Auction</a>
 </h4>
 
-<div *ngIf="auctionItems()">
-  <div *ngFor="let auctionItem of auctionItems()">
-    <app-tank-card [vehicle]="auctionItem.entity"></app-tank-card>
-    {{auctionItem.entity?.user_string}}</div>
+<div *ngIf="auctionItems()" class="auction-items-list">
+  <mat-card *ngFor="let auctionItem of auctionItems()">
+    <mat-card-content class="card-content">
+      <app-tank-card [vehicle]="auctionItem.entity"></app-tank-card>
+      <span [style]="auctionItem.entity?.is_premium | vehicleSort: auctionItem.entity?.is_collectible"> {{auctionItem.entity?.user_string}} </span>
+      <table class="mat-elevation-z8 auction-item-info-table">
+        <tbody>
+          <tr>
+            <td style="text-align:left;">Current Price</td>
+            <td style="text-align:right;">
+              <span [style.color]="PREMIUM_COLOR">{{auctionItem.price?.value | number}}</span>
+              {{priceDrop(auctionItem.price?.value, auctionItem.initialPrice)}}
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:left;">Available</td>
+            <td style="text-align:right;">
+              <span [style.color]="availableColor(auctionItem.current_count, auctionItem.initial_count)">
+                {{auctionItem.current_count | number}}
+              </span>
+              / {{auctionItem.initial_count | number}}
+              ({{availablePercent(auctionItem.current_count, auctionItem.initial_count)}}%)
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:left;">Next price</td>
+            <td style="text-align:right;">
+              <span [style.color]="PREMIUM_COLOR">
+                {{auctionItem.next_price?.value | number}}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
 </div>
