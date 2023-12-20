@@ -8,8 +8,19 @@
   mode="indeterminate">
 </mat-progress-spinner>
 
-<div *ngIf="!isLoading() && auctionItems()" class="auction-items-list">
-  <mat-card *ngFor="let auctionItem of auctionItems()">
+<div style="margin: 5px;">Next price drop in {{timeToNextDrop()}}</div>
+<div class="auto-center">
+<mat-progress-bar
+  style="width: 90%"
+  color="accent"
+  mode="determinate"
+  [value]="timeUntilRequestInPercent()"
+  >
+</mat-progress-bar>
+</div>
+
+<div *ngIf="auctionItems$ | async as auctionItems" class="auction-items-list">
+  <mat-card *ngFor="let auctionItem of auctionItems">
     <mat-card-content class="card-content">
       <app-tank-card [vehicle]="auctionItem.entity"></app-tank-card>
       <span [style]="auctionItem.entity?.is_premium | vehicleSort: auctionItem.entity?.is_collectible"> {{auctionItem.entity?.user_string}} </span>
