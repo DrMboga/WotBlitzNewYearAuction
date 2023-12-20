@@ -1,4 +1,4 @@
-import { Component, Signal } from '@angular/core';
+import { Component, effect, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { AuctionApiService } from '../../Services/auction-api.service';
 import { AsyncPipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
@@ -9,6 +9,10 @@ import { MatCardModule } from '@angular/material/card';
 import { VehicleSortPipe } from '../../Pipes/vehicle-sort.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { PREMIUM_COLOR } from '../../constants';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+const TimerPeriod = 1000; // 1 second
+const UpdateAuctionPeriod = 10 * 60 * 1000; // 10 mins in milliseconds
 
 @Component({
   selector: 'app-auction',
@@ -23,6 +27,7 @@ import { PREMIUM_COLOR } from '../../constants';
     VehicleSortPipe,
     MatTableModule,
     DecimalPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './auction.component.html',
   styleUrl: './auction.component.css',
@@ -32,7 +37,17 @@ export class AuctionComponent {
     this.auctionApi.getAuctionItems(),
     { initialValue: undefined },
   );
-  constructor(private auctionApi: AuctionApiService) {}
+
+  public isLoading = this.auctionApi.isLoading;
+  constructor(private auctionApi: AuctionApiService) {
+    // effect((onCleanup) => {
+    //   const timer = setTimeout(this.onTimerTick, TimerPeriod);
+    //
+    //   onCleanup(() => {
+    //     clearTimeout(timer);
+    //   });
+    // });
+  }
 
   protected readonly PREMIUM_COLOR = PREMIUM_COLOR;
 
@@ -53,4 +68,6 @@ export class AuctionComponent {
     const percent = this.availablePercent(current, total);
     return percent < 10 ? 'red' : 'green';
   }
+
+  private onTimerTick() {}
 }

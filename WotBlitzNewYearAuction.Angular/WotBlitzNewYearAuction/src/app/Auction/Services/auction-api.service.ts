@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuctionResponse } from '../../Model/AuctionResponse';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, defer, finalize, map, Observable, throwError } from 'rxjs';
 import { AuctionItem } from '../../Model/AuctionItem';
 import { InitialPricesPersistenceService } from './initial-prices-persistence.service';
 
@@ -19,6 +19,7 @@ const sortByAvailableDate = (a: AuctionItem, b: AuctionItem): number => {
   providedIn: 'root',
 })
 export class AuctionApiService {
+  public isLoading = signal<boolean>(false);
   public nextPriceDropTime = signal<Date | undefined>(undefined);
   public lastReadTime = signal<number>(MinDateTime);
 
@@ -29,39 +30,43 @@ export class AuctionApiService {
 
   public getAuctionItems(): Observable<AuctionItem[] | undefined> {
     const initialPrices = this.initialPricesPersistence.getInitialPrices();
-    return this.http.get<AuctionResponse>(AuctionUrl).pipe(
-      map((response) => {
-        if (!response?.results) {
-          return undefined;
-        }
-        for (const auctionItem of response.results.filter(
-          (i) => i.available && i.current_count > 0,
-        )) {
-          const initialPrice = initialPrices.find((i) => i.vehicleId === auctionItem.entity!.id);
-          if (initialPrice) {
-            auctionItem.initialPrice = initialPrice.initialPrice;
-          } else {
-            auctionItem.initialPrice = auctionItem.price!.value;
-            this.initialPricesPersistence.addNewInitialPrice({
-              vehicleId: auctionItem.entity!.id,
-              initialPrice: auctionItem.price!.value,
-            });
+    return defer(() => {
+      this.isLoading.set(true);
+      return this.http.get<AuctionResponse>(AuctionUrl).pipe(
+        map((response) => {
+          if (!response?.results) {
+            return undefined;
+          }
+          for (const auctionItem of response.results.filter(
+            (i) => i.available && i.current_count > 0,
+          )) {
+            const initialPrice = initialPrices.find((i) => i.vehicleId === auctionItem.entity!.id);
+            if (initialPrice) {
+              auctionItem.initialPrice = initialPrice.initialPrice;
+            } else {
+              auctionItem.initialPrice = auctionItem.price!.value;
+              this.initialPricesPersistence.addNewInitialPrice({
+                vehicleId: auctionItem.entity!.id,
+                initialPrice: auctionItem.price!.value,
+              });
+            }
+
+            if (auctionItem.next_price_datetime) {
+              this.nextPriceDropTime.set(auctionItem.next_price_datetime);
+            }
           }
 
-          if (auctionItem.next_price_datetime) {
-            this.nextPriceDropTime.set(auctionItem.next_price_datetime);
-          }
-        }
+          const now = new Date();
+          this.lastReadTime.set(now.getTime());
 
-        const now = new Date();
-        this.lastReadTime.set(now.getTime());
-
-        return response.results
-          .filter((i) => i.available && i.current_count > 0)
-          .sort(sortByAvailableDate);
-      }),
-      catchError(this.handleError),
-    );
+          return response.results
+            .filter((i) => i.available && i.current_count > 0)
+            .sort(sortByAvailableDate);
+        }),
+        catchError(this.handleError),
+        finalize(() => this.isLoading.set(false)),
+      );
+    });
   }
 
   private handleError(error: HttpErrorResponse) {

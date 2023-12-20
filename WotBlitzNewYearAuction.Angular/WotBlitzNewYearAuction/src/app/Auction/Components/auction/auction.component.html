@@ -2,7 +2,13 @@
   <a mat-button href="https://eu.wotblitz.com/en/auction/#/">WOT Blitz Auction</a>
 </h4>
 
-<div *ngIf="auctionItems()" class="auction-items-list">
+<mat-progress-spinner *ngIf="isLoading()"
+  class="example-margin"
+  color="accent"
+  mode="indeterminate">
+</mat-progress-spinner>
+
+<div *ngIf="!isLoading() && auctionItems()" class="auction-items-list">
   <mat-card *ngFor="let auctionItem of auctionItems()">
     <mat-card-content class="card-content">
       <app-tank-card [vehicle]="auctionItem.entity"></app-tank-card>
