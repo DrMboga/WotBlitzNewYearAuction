@@ -4,11 +4,12 @@ import { AuctionApiService } from '../../Services/auction-api.service';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuctionItem } from '../../../Model/AuctionItem';
+import { TankCardComponent } from '../tank-card/tank-card.component';
 
 @Component({
   selector: 'app-auction',
   standalone: true,
-  imports: [MatButtonModule, NgIf, NgForOf, AsyncPipe],
+  imports: [MatButtonModule, NgIf, NgForOf, AsyncPipe, TankCardComponent],
   templateUrl: './auction.component.html',
   styleUrl: './auction.component.css',
 })

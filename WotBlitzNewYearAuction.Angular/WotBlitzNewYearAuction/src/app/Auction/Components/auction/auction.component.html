@@ -3,5 +3,7 @@
 </h4>
 
 <div *ngIf="auctionItems()">
-  <p *ngFor="let auctionItem of auctionItems()">{{auctionItem.entity?.user_string}}</p>
+  <div *ngFor="let auctionItem of auctionItems()">
+    <app-tank-card [vehicle]="auctionItem.entity"></app-tank-card>
+    {{auctionItem.entity?.user_string}}</div>
 </div>

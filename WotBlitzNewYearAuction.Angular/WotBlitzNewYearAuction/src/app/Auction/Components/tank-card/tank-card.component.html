@@ -1,0 +1,8 @@
+<div class="tank-image">
+  <div class="tank-flag-background" [style]="vehicle?.nation | nationBackground"></div>
+  <div class="tank-tier">
+    <b [style]="vehicle?.is_premium | vehicleSort: vehicle?.is_collectible">{{vehicle?.roman_level}}</b>
+  </div>
+  <img [src]="vehicle?.preview_image_url" class="tank-preview" [alt]="vehicle?.user_string" />
+  <img [src]="vehicle?.type_slug | vehicleType:vehicle?.is_premium:vehicle?.is_collectible" class="tank-type" [alt]="vehicle?.type_slug" />
+</div>
