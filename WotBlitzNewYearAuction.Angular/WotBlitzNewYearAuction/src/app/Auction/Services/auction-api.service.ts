@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuctionResponse } from '../../Model/AuctionResponse';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { AuctionItem } from '../../Model/AuctionItem';
+import { InitialPricesPersistenceService } from './initial-prices-persistence.service';
 
 const AuctionUrl = 'http://localhost:6001/auction';
 
@@ -17,10 +18,13 @@ const sortByAvailableDate = (a: AuctionItem, b: AuctionItem): number => {
   providedIn: 'root',
 })
 export class AuctionApiService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private initialPricesPersistence: InitialPricesPersistenceService,
+  ) {}
 
   public getAuctionItems(): Observable<AuctionItem[] | undefined> {
-    // TODO: Read local storage for InitialPrices
+    const initialPrices = this.initialPricesPersistence.getInitialPrices();
     return this.http.get<AuctionResponse>(AuctionUrl).pipe(
       map((response) => {
         if (!response?.results) {
@@ -29,12 +33,22 @@ export class AuctionApiService {
         for (const auctionItem of response.results.filter(
           (i) => i.available && i.current_count > 0,
         )) {
-          // TODO: Fill `auctionItem.initialPrice`
+          const initialPrice = initialPrices.find((i) => i.vehicleId === auctionItem.entity!.id);
+          if (initialPrice) {
+            auctionItem.initialPrice = initialPrice.initialPrice;
+          } else {
+            auctionItem.initialPrice = auctionItem.price!.value;
+            this.initialPricesPersistence.addNewInitialPrice({
+              vehicleId: auctionItem.entity!.id,
+              initialPrice: auctionItem.price!.value,
+            });
+          }
+
           if (auctionItem.next_price_datetime) {
             // TODO: Push next price to variable
           }
         }
-        // TODO: Save new InitialPrices to local storage
+
         const now = new Date();
         // TODO: Set this date to lastApiReadTime
 
