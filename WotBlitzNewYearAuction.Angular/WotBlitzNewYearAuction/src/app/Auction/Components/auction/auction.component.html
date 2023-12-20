@@ -2,4 +2,6 @@
   <a mat-button href="https://eu.wotblitz.com/en/auction/#/">WOT Blitz Auction</a>
 </h4>
 
-<p>auction works!</p>
+<div *ngIf="auctionItems()">
+  <p *ngFor="let auctionItem of auctionItems()">{{auctionItem.entity?.user_string}}</p>
+</div>
