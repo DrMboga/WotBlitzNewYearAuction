@@ -1,7 +1,7 @@
 import { Component, computed, effect, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { AuctionApiService } from '../../Services/auction-api.service';
-import { AsyncPipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe, NgForOf, NgIf } from '@angular/common';
 import { TankCardComponent } from '../tank-card/tank-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { VehicleSortPipe } from '../../Pipes/vehicle-sort.pipe';
@@ -30,6 +30,7 @@ const UpdateAuctionPeriod = 10 * 60 * 1000; // 10 mins in milliseconds
     DecimalPipe,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    DatePipe,
   ],
   templateUrl: './auction.component.html',
   styleUrl: './auction.component.css',
